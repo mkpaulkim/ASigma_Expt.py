@@ -94,9 +94,7 @@ def plotAAB(AA, figname='plotAAB', capA='', capB='', cmap='gray', line='#1f77b4'
     extent = (x0, x0 + dx*nx, y0, y0 + dy*ny)
     xx = x0 + np.arange(nx) * dx
 
-    print(f'< plotAAB 1')
     plt.figure(figname, figsize=figxy, dpi=dpi, tight_layout=True)
-    print(f'< plotAAB 2')
     plt.clf()
     plt.subplot2grid((ay + by, 1), (0, 0), rowspan=ay)
     plt.imshow(AA, cmap=cmap, aspect='auto', extent=extent)

@@ -9,7 +9,7 @@ import pycubelib.files_functions as ff
 pi = np.pi
 pi2 = pi * 2
 cwd = os.path.dirname(__file__)
-txtpath0 = cwd + '/temp_data/aaa.txt'
+txtpath0 = 'E:/{{SeaGate}}/Dropbox/[[ PROJECTS.dbox ]]/project folders 2021/proj 2021-10 AlphaSigma/temp_data/aaa.txt'
 
 # fp = tkp.tkwindow('AlphaSigma', (20, 20, 1100, 550))
 fp = tkp.tkwindow('AlphaSigma', (20, 20, 1100, 350))
