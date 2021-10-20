@@ -8,6 +8,7 @@ import pycubelib.files_functions as ff
 
 pi = np.pi
 pi2 = pi * 2
+pi2limit = (-pi, pi)
 cwd = os.path.dirname(__file__)
 txtpath0 = 'E:/{{SeaGate}}/Dropbox/[[ PROJECTS.dbox ]]/project folders 2021/proj 2021-10 AlphaSigma/temp_data/aaa.txt'
 
@@ -26,7 +27,7 @@ btn_cam = tkp.CmdButton(fp, (100, 120, 10), 'camera', 'dark orange')
 ent_level = tkp.ParamEntry(fp, (100, 150, 10), 0, 'level', rw='r')
 prog_level = tkp.ProgressBar(fp, (50, 180, 125), '')
 ent_lam0 = tkp.ParamEntry(fp, (100, 240, 10), 0.6328, 'lam0, um')
-ent_ax = tkp.ParamEntry(fp, (100, 270, 10), 0, 'ax, mm')
+ent_ax = tkp.ParamEntry(fp, (100, 270, 10), 10, 'ax, mm')
 ent_roi = tkp.ParamEntry(fp, (50, 300, 20), f'{qcam.nx//2}, {qcam.ny//2}, 10, 10', 'roi')
 
 ent_vpz = tkp.ParamEntry(fp, (300, 30, 10), 0, 'V pz')
@@ -139,7 +140,7 @@ def get_vv():
     make_notes()
 
 
-def acq_hh():
+def acq_hh(iq=1):
     btn_hh.on()
     qcam.acquire_cc()
     hh = np.array(qcam.cc) * (1j * 0.0)
@@ -151,7 +152,14 @@ def acq_hh():
         prog_vscan.setval(100 * (iv+1) / len(vv))
         qcam.acquire_cc()
         hh += np.array(qcam.cc) * np.exp(1j * ph)
-    hha = 1/(65536/4) * np.abs(hh) / nv
+
+    # lam0 = ent_lam0.get_val(float)
+    # k0 = pi2 / lam0
+    # theta_n = 2 * (q_ns[iq] - q_ns[1]) * pi/180
+    # gg = np.exp(1j * k0 * np.sin(theta_n) * xx)
+    # hh = hh * gg
+
+    hha = np.abs(hh) / nv / (2 ** 14)
     hhp = np.angle(hh)
     pf.plotAAB(hha, 'HH_abs', 'HH_abs', roi=roi, sxy=(.3, .3), pause=0.1)
     pf.plotAAB(hhp, 'HH_phs', 'HH_phs', roi=roi, sxy=(.3, .3), pause=0.1)
@@ -199,8 +207,9 @@ def get_qns():
 
 def madh():
     btn_madh.on()
-    abslimit = (0, 2**14-1)
-    pi2limit = (-pi, pi)
+    # abslimit = (0, 2**14-1)
+    lam0 = ent_lam0.get_val(float)
+    k0 = pi2/lam0
 
     ff.write_txt(make_notes(), ent_txtpath.get_val(str))
 
@@ -209,15 +218,21 @@ def madh():
         ddr.goto(q)
         ent_qscan.set_entry(f'{q:.4f}')
         prog_qscan.setval(100 * (iq+1) / len(q_ns[1:]))
-        hha, hhp = acq_hh()
+        hha, hhp = acq_hh(iq+1)
+
+        theta_n = 2 * (q_ns[iq+1] - q_ns[1]) * pi/180
+        ggp = k0 * np.sin(theta_n) * xx
+        hhp = np.mod(hhp + ggp + pi, pi2) - pi
+
         phs_path = ent_txtpath.get_val(str).replace('.txt', f'_{iq+1}p.png')
         ent_phspath.set_entry(phs_path)
         ff.write_png(hhp, phs_path, pi2limit)
         shha += hha
+
     abs_path = ent_txtpath.get_val(str).replace('.txt', f'_aa.png')
-    hha = 4. * shha / len(q_ns[1:])
+    hha = shha / len(q_ns[1:])
     ent_phspath.set_entry(abs_path)
-    ff.write_png(hha, abs_path, abslimit)
+    ff.write_png(hha, abs_path, (0., 1.))
     btn_madh.off()
 
 
@@ -294,6 +309,13 @@ get_qns()
 btn_cam.on()
 
 blank = qcam.cc * 0.0
+nx, ny = qcam.nxy
+ax = ent_ax.get_val(float) * 1e3
+dx = ax / nx
+ay = dx * ny
+x = np.arange(nx) * dx - ax/2
+y = np.arange(ny) * dx - ay/2
+xx, yy = np.meshgrid(x, y)
 
 tloop = 10
 fp.after(tloop, main_loop)
