@@ -47,7 +47,7 @@ def what_is(name, var, cmax=200):
 
 
 def prn_list(aname, alist, m=3):
-    outstring = f'> {aname} = ' + ', '.join(f'{a:.{m}f}' for a in alist) + '; '
+    outstring = f'> {aname} = [' + ', '.join(f'{a:.{m}f}' for a in alist) + ']; '
     # print(outstring)
     return outstring
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     # print(f'short_path = {s_path}')
     # print(f'fname = {dict_parts["fname"]}')
 
-    bb = find_param('lam_ns = 0.000, 0.602, 0.602, 0.601, 0.601, 0.600; ', 'lam_ns', float)
+    bb = find_param('lam_ns = [0.000, 0.602, 0.602, 0.601, 0.601, 0.600]; ', 'lam_ns', float)
     print(f'< bb = {bb}')
     b = find_param('psi = 18.0;', 'psi')
     print(f'< b = {b}')

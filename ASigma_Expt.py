@@ -47,7 +47,7 @@ ent_psi = tkp.ParamEntry(fp, (500, 90, 10), 18.0, 'psi')
 ent_q0 = tkp.ParamEntry(fp, (500, 120, 10), 237.5959, 'Q0')
 ent_q1 = tkp.ParamEntry(fp, (500, 150, 10), 237.6000, 'Q1')
 btn_qns = tkp.CmdButton(fp, (500, 180, 10), 'get Qns', 'orange')
-ent_lam12 = tkp.ParamEntry(fp, (500, 210, 10), 2000.0, 'lam_12, um')
+ent_lam12 = tkp.ParamEntry(fp, (500, 210, 10), 5000.0, 'lam_12, um')
 ent_gamma = tkp.ParamEntry(fp, (500, 240, 10), 0.5, 'gamma')
 ent_nh = tkp.ParamEntry(fp, (500, 270, 10), 5, 'Nh')
 ent_lam1n_last = tkp.ParamEntry(fp, (500, 300, 10), 0, 'lam1n last', rw='r')
@@ -268,8 +268,8 @@ def make_notes():
                  gf.prn_list('lam_ns', lam_ns, 8) + '\n' + \
                  gf.prn_list('lam_1ns', lam_1ns, 1) + '\n'
     header0 = f'> [{gf.path_parts(ent_txtpath.get_val(str), 3)[0]}] \n'
-    header1 = f'> >> nx = {qcam.nx}; ny = {qcam.ny}; dx_um = {ent_ax.get_val(float) / qcam.nx:.3f}; ' \
-             f'nh = {ent_nh.get_val()}; '+gf.prn_list('lam_ns', lam_ns)[2:] + '; \n'
+    header1 = f'%%% nx = {qcam.nx}; ny = {qcam.ny}; dx = {ent_ax.get_val(float) / qcam.nx:.3f}; ' \
+             f'nw = {ent_nh.get_val()}; ' + gf.prn_list('wln', lam_ns)[2:] + '\n'
     notes = header0 + cam_notes + vpz_notes + qq_notes + list_notes + header1
 
     print(f'\n{notes}')
