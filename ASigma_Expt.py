@@ -248,10 +248,12 @@ def set_txtpath():
 
 
 def make_notes():
+    ax = ent_ax.get_val(float)
+    dx = ent_ax.get_val(float) * 1e3 / qcam.nx
     cam_notes = f'> Tcam_ms = {ent_tcam.get_val()}; ' \
                 f't_exp_ms = {ent_texp.get_val(float)}; ' \
                 f'lam0_um = {ent_lam0.get_val(float)}; ' \
-                f'ax_mm = {ent_ax.get_val(float)}; \n'
+                f'ax_mm = {ax}; \n'
     vpz_notes = f'> V_2pi = {ent_v2pi.get_val(float)}; ' \
                 f'V1 = {ent_v1.get_val(float)}; ' \
                 f'nV = {ent_nv.get_val()}; ' \
@@ -268,8 +270,8 @@ def make_notes():
                  gf.prn_list('lam_ns', lam_ns, 8) + '\n' + \
                  gf.prn_list('lam_1ns', lam_1ns, 1) + '\n'
     header0 = f'> [{gf.path_parts(ent_txtpath.get_val(str), 3)[0]}] \n'
-    header1 = f'%%% nx = {qcam.nx}; ny = {qcam.ny}; dx = {ent_ax.get_val(float) / qcam.nx:.3f}; ' \
-             f'nw = {ent_nh.get_val()}; ' + gf.prn_list('wln', lam_ns)[2:] + '\n'
+    header1 = f'%%% nx = {qcam.nx}; ny = {qcam.ny}; dx = {dx:.3f}; ' \
+             f'nw = {ent_nh.get_val()}; ' + gf.prn_list('wln', lam_ns, 8)[2:] + '\n'
     notes = header0 + cam_notes + vpz_notes + qq_notes + list_notes + header1
 
     print(f'\n{notes}')

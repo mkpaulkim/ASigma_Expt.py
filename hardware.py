@@ -1,6 +1,7 @@
 import serial
 import time
 import os
+
 os.environ['PATH'] = 'C:\\Program Files\\Thorlabs\\APT\\APT Server;' + os.environ['PATH']
 
 # print(f'> loading hardware.py ...')
@@ -177,7 +178,7 @@ class Quantalux:
         print(f'> hw.Quantalux.dispose: disposed ...')
 
     def test_qcam(self):
-        import plotting_functions as pf
+        import pycubelib.plotting_functions as pf
 
         self.setup(t_exp=1.0)
         self.acquire_cc()
