@@ -14,7 +14,7 @@ txtpath0 = 'E:/{{SeaGate}}/Dropbox/[[ PROJECTS.dbox ]]/project folders 2021/proj
 
 # fp = tkp.tkwindow('AlphaSigma', (20, 20, 1100, 550))
 fp = tkp.tkwindow('AlphaSigma', (20, 20, 1100, 350))
-arduino = hw.Arduino()
+uno = hw.Arduino()
 qcam = hw.Quantalux()
 pzt = hw.MDT694B()
 ddr = hw.DDR25()
@@ -63,7 +63,8 @@ ent_phspath = tkp.ParamEntry(fp, (800, 210, 35), '', 'phs_path', rw='r')
 ent_txtpath.right()
 ent_phspath.right()
 # txtbox = tkp.TextBox(fp, (100, 350, 900, 150), '')
-btn_adios = tkp.CmdButton(fp, (900, 30, 10), 'adios', 'indian red')
+btn_laser = tkp.CmdButton(fp, (700, 300, 10), 'laser')
+btn_adios = tkp.CmdButton(fp, (900, 300, 10), 'adios', 'indian red')
 
 
 def main_loop():
@@ -81,7 +82,7 @@ def set_camera():
 
     t_cam = ent_tcam.get_val()
     t_exp = ent_texp.get_val(typ=float)
-    arduino.set_Tcam(t_cam)
+    uno.set_Tcam(t_cam)
     qcam.setup(t_exp=t_exp)
     roi = tuple(np.float(a) for a in ent_roi.get_val(str).split(','))
 
@@ -279,6 +280,15 @@ def make_notes():
     return notes
 
 
+def laser():
+    if not btn_laser.is_on():
+        btn_laser.on()
+        uno.set_LED(3)
+    else:
+        btn_laser.off()
+        uno.set_LED(0)
+
+
 def adios():
     qcam.dispose()
     fp.destroy()
@@ -296,6 +306,7 @@ btn_qset.command(set_ddr_q)
 btn_qns.command(get_qns)
 btn_madh.command(madh)
 btn_txt.command(set_txtpath)
+btn_laser.command(laser)
 btn_adios.command(adios)
 
 vv = []

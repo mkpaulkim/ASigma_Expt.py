@@ -9,7 +9,8 @@ def tkwindow(title, window=(20, 20, 500, 300), tkbg='gray75'):
     tkw.title(title)
     x0, y0, ax, ay = window
     tkw.geometry(f'{ax}x{ay}+{x0}+{y0}')
-    tkw.iconbitmap('.\\qcam_setup\\hcube.ico')
+    # tkw.iconbitmap('.\\qcam_setup\\hcube.ico')
+    tkw.iconbitmap('pycubelib\\hcube.ico')
     tkw.config(bg=tkbg)
     return tkw
 
