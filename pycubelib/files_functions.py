@@ -1,8 +1,10 @@
 from tkinter import filedialog
+from tkinter import messagebox
 import cv2
 import numpy as np
 import pycubelib.data_functions as df
 import pycubelib.general_functions as gf
+from os import path
 
 u16limit = (0, 2 ** 16 - 1)
 
@@ -12,6 +14,11 @@ def write_txt(text, txt_path=""):
         txt_path = filedialog.asksaveasfilename(title='.TXT file name to write',
                                                 filetypes=[('TXT files', '*.txt *.TXT')],
                                                 defaultextension='.txt')
+    if path.exists(txt_path):
+        ans = messagebox.askyesno('file exists', '.txt file exists - overwrite? ')
+        if not ans:
+            return ''
+
     with open(txt_path, 'w') as f:
         f.write(text)
     return txt_path

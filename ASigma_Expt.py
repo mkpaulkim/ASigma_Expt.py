@@ -21,13 +21,13 @@ ddr = hw.DDR25()
 # print(f'> ASigma_expt: ready ...')
 
 ent_tcam = tkp.ParamEntry(fp, (100, 30, 10), 300, 'T_cam, ms')
-ent_texp = tkp.ParamEntry(fp, (100, 60, 10), 3.00, 't_exp, ms')
+ent_texp = tkp.ParamEntry(fp, (100, 60, 10), 35.00, 't_exp, ms')
 btn_cset = tkp.CmdButton(fp, (100, 90, 10), 'cam set', 'orange')
 btn_cam = tkp.CmdButton(fp, (100, 120, 10), 'camera', 'dark orange')
 ent_level = tkp.ParamEntry(fp, (100, 150, 10), 0, 'level', rw='r')
 prog_level = tkp.ProgressBar(fp, (50, 180, 125), '')
 ent_lam0 = tkp.ParamEntry(fp, (100, 240, 10), 0.6328, 'lam0, um')
-ent_ax = tkp.ParamEntry(fp, (100, 270, 10), 10, 'ax, mm')
+ent_ax = tkp.ParamEntry(fp, (100, 270, 10), 9.5, 'ax, mm')
 ent_roi = tkp.ParamEntry(fp, (50, 300, 20), f'{qcam.nx//2}, {qcam.ny//2}, 10, 10', 'roi')
 
 ent_vpz = tkp.ParamEntry(fp, (300, 30, 10), 0, 'V pz')
@@ -200,9 +200,9 @@ def get_qns():
         q_ns += [qn]
     ent_lam1n_last.set_entry(f'{lam_1ns[-1]:.1f}')
 
-    # gf.prn_list('lam_1ns', lam_1ns, 1)
     # gf.prn_list('q_ns', q_ns, 4)
     # gf.prn_list('lam_ns', lam_ns, 8)
+    # gf.prn_list('lam_1ns', lam_1ns, 1)
     make_notes()
 
 
@@ -212,7 +212,10 @@ def madh():
     lam0 = ent_lam0.get_val(float)
     k0 = pi2/lam0
 
-    ff.write_txt(make_notes(), ent_txtpath.get_val(str))
+    txt_path = ff.write_txt(make_notes(), ent_txtpath.get_val(str))
+    if not txt_path:
+        btn_madh.off()
+        return
 
     shha = np.copy(blank)
     for iq, q in enumerate(q_ns[1:]):
@@ -319,7 +322,7 @@ set_vpz()
 get_vv()
 set_ddr_q()
 get_qns()
-btn_cam.on()
+# btn_cam.on()
 
 blank = qcam.cc * 0.0
 nx, ny = qcam.nxy
